@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 
 import matplotlib.pyplot as plt
 
-def plot_form_responses(df, column_name):
+def plot_form_responses_1(df, column_name):
     # Calculate the number and percentage of empty or 'No' responses
-    empty_responses = len(df[df[column_name].isnull() | (df[column_name] == 'No')])
+    empty_responses = len(df[df[column_name].isnull() ]) #| (df[column_name] == 'No')
     total_responses = len(df)
     count_no_response = empty_responses
     count_responded = total_responses - empty_responses
@@ -154,22 +154,24 @@ def plot_comparison(df, new_df_column, df_column):
 
 
 
+import matplotlib.pyplot as plt
+
 def plot_observation_count(new_df_library, df_1, column_name):
     # Count observations in new_df_library with the condition
     new_df_count = new_df_library["Comment_ID"].str[:5].nunique()
-
     # Count observations in df_1 without applying the condition
     df_1_count = len(df_1)
-
     # Create a figure with two subplots
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
 
     # Pie chart
     labels = [column_name, 'other participants']
     sizes = [new_df_count, df_1_count]
-    ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+    ax1.pie(sizes, autopct='%1.1f%%', startangle=90)
     ax1.set_aspect('equal')
     ax1.set_title('Participants Count Comparison')
+    # Add a legend to the pie chart
+    ax1.legend(labels, loc='upper center', bbox_to_anchor=(0.5, 0.05), ncol=1)
 
     # Bar chart
     x = [column_name, 'total participants']
@@ -177,20 +179,17 @@ def plot_observation_count(new_df_library, df_1, column_name):
     bars = ax2.bar(x, y, width=0.5)  # Adjust the bar width as desired
     ax2.set_ylabel('Numbers of participants')
     ax2.set_title('Participants Count Comparison')
-
     # Add value labels to the bars
     for bar in bars:
         height = bar.get_height()
         ax2.text(bar.get_x() + bar.get_width() / 2, height, str(height), ha='center', va='bottom')
-
     # Increase the y-axis limit
     ax2.set_ylim(top=max(y) * 1.1)
-
     # Adjust the layout
     plt.tight_layout()
-
     # Display the combined chart
     plt.show()
+
 
 
 
@@ -324,50 +323,7 @@ def create_word_frequency_table(recommendations_list):
     for word, freq in word_freq.most_common():
         print(f"{word}: {freq}")
 
-# Example usage
     
-
-
-
-import nltk
-from nltk.sentiment import SentimentIntensityAnalyzer
-from nltk.tokenize import sent_tokenize
-
-# Download the VADER lexicon for sentiment analysis
-nltk.download('vader_lexicon')
-
-# Create a sentiment analyzer object
-sia = SentimentIntensityAnalyzer()
-
-def analyze_sentiment(recommendations_list):
-    """
-    Analyzes the sentiment of each recommendation in the given list.
-
-    Args:
-        recommendations_list (list): List of recommendations.
-
-    Returns:
-        list: List of tuples containing the recommendation and its sentiment score.
-    """
-    # Initialize an empty list to store the results
-    results = []
-
-    # Iterate over each recommendation in the list
-    for text in recommendations_list:
-        # Split the text into sentences
-        sentences = sent_tokenize(text)
-
-        # Calculate the sentiment score for each sentence and average them
-        avg_sentiment_score = sum(sia.polarity_scores(sentence)['compound'] for sentence in sentences) / len(sentences)
-
-        # Append the recommendation and its sentiment score to the results list
-        results.append((text, avg_sentiment_score))
-
-    # Return the list of results
-    return results
-
-
-
 
 
 
