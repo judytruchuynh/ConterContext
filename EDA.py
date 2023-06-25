@@ -1,47 +1,28 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+def count_missing_values_1(df):
+    # Create a DataFrame to store the results
+    missing_counts = pd.DataFrame(index=df.columns, columns=['Missing', 'Non-Missing'])
 
-import matplotlib.pyplot as plt
+    # Loop over each column in the DataFrame
+    for col in df.columns:
+        # Count the number of missing and non-missing values for the column
+        missing = df[col].isna().sum()
+        non_missing = df[col].notna().sum()
 
-def plot_form_responses_1(df, column_name):
-    # Calculate the number and percentage of empty or 'No' responses
-    empty_responses = len(df[df[column_name].isnull() ]) #| (df[column_name] == 'No')
-    total_responses = len(df)
-    count_no_response = empty_responses
-    count_responded = total_responses - empty_responses
+        # Store the counts in the DataFrame
+        missing_counts.loc[col, 'Missing'] = missing
+        missing_counts.loc[col, 'Non-Missing'] = non_missing
 
-    # Create labels for the pie chart and bar chart
-    labels = ['No Response', 'Responded']
-    sizes = [count_no_response, count_responded]
+    # Sort the DataFrame by the number of missing values
+    missing_counts.sort_values(by=['Missing'], inplace=True, ascending=False)
 
-    # Create a figure with two subplots
-    fig, (ax1, ax2) = plt.subplots(1, 2)
+    # Display the sorted results
+    return missing_counts
 
-    # Plot the pie chart
-    ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
-    ax1.axis('equal')
-    ax1.set_title('Percentage of Form Responses')
 
-    # Plot the bar chart
-    ax2.bar(labels, sizes)
-    ax2.set_ylabel('Count')
-    ax2.set_title('Number of Form Responses')
-
-    # Add annotations to the bars
-    for bar in ax2.patches:
-        height = bar.get_height()
-        ax2.text(bar.get_x() + bar.get_width() / 2, height, f'{height}', ha='center', va='bottom')
-
-    # Adjust spacing between subplots
-    fig.subplots_adjust(wspace=0.9)
-
-    # Display the charts
-    plt.show()
-
-    
-    
-def plot_comparison(df, new_df_column, df_column):
+def plot_comparison_2(df, new_df_column, df_column):
     # Count observations in new_df with the condition
     new_df_count = df[new_df_column].str[:5].nunique()
 
@@ -81,7 +62,7 @@ def plot_comparison(df, new_df_column, df_column):
     
 
 import re
-def split_sentences(df, column_name):
+def split_sentences_3(df, column_name):
     # Create a regex pattern to match sentences
     pattern = r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s"
 
@@ -113,7 +94,7 @@ def split_sentences(df, column_name):
 
 
 
-def plot_comparison(df, new_df_column, df_column):
+def plot_comparison_4(df, new_df_column, df_column):
     # Count observations in new_df with the condition
     new_df_count = df[new_df_column].str[:5].nunique()
 
@@ -154,9 +135,8 @@ def plot_comparison(df, new_df_column, df_column):
 
 
 
-import matplotlib.pyplot as plt
 
-def plot_observation_count(new_df_library, df_1, column_name):
+def plot_observation_count_5(new_df_library, df_1, column_name):
     # Count observations in new_df_library with the condition
     new_df_count = new_df_library["Comment_ID"].str[:5].nunique()
     # Count observations in df_1 without applying the condition
@@ -195,11 +175,7 @@ def plot_observation_count(new_df_library, df_1, column_name):
 
 
 
-
-import pandas as pd
-import matplotlib.pyplot as plt
-
-def plot_lengths_comments(df_list, names):
+def plot_lengths_comments_6(df_list, names):
     lengths = [len(df) for df in df_list]
 
     # Sort the lengths and names in ascending order
@@ -209,7 +185,7 @@ def plot_lengths_comments(df_list, names):
     bars = ax.bar(names, lengths, width=0.5)  # Adjust the bar width as desired
     ax.set_xlabel('Topics')
     ax.set_ylabel('Numbers of recommendations')
-    ax.set_title('Comparison about numbers of recommendations about topics')
+    ax.set_title('Numbers of recommendations about topics')
 
     # Rotate the x-axis labels by 90 degrees
     plt.xticks(rotation=90)
@@ -233,11 +209,8 @@ def plot_lengths_comments(df_list, names):
     
     
     
-    
-import pandas as pd
-import matplotlib.pyplot as plt
 
-def plot_numbers_surveyors(df_list, names):
+def plot_numbers_surveyors_7(df_list, names):
     lengths = [df['Comment_ID'].str[:5].nunique() for df in df_list]
 
     # Sort the lengths and names in ascending order
@@ -247,7 +220,7 @@ def plot_numbers_surveyors(df_list, names):
     bars = ax.bar(names, lengths, width=0.5)  # Adjust the bar width as desired
     ax.set_xlabel('Topics')
     ax.set_ylabel('Numbers of surveyors')
-    ax.set_title('Comparison about numbers of surveyors giving recommadation about topics')
+    ax.set_title('Numbers of surveyors giving recommadation about topics')
 
     # Rotate the x-axis labels by 90 degrees
     plt.xticks(rotation=90)
@@ -268,10 +241,9 @@ def plot_numbers_surveyors(df_list, names):
     
 
 
-import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 
-def generate_wordcloud(df, column_name):
+def generate_wordcloud_8(df, column_name):
     # Create a copy of the dataframe
     feedback_df_ = df.copy()
 
@@ -301,7 +273,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
 from nltk.probability import FreqDist
 
-def create_word_frequency_table(recommendations_list):
+def create_word_frequency_table_9(recommendations_list):
     # Download stopwords if not already downloaded
     nltk.download('stopwords')
 
@@ -325,9 +297,162 @@ def create_word_frequency_table(recommendations_list):
 
     
 
+    
+
+    
+    
+    
+
+def generate_response_counts_10(df_selected):
+    # Create an empty dictionary to hold the counts for each response
+    counts_dict = {}
+
+    for col in df_selected.columns:
+        # Get the value counts for that column and add it to the dictionary
+        counts_dict[col] = df_selected[col].value_counts(dropna=False)
+
+    # Create a new dataframe from the dictionary
+    df_counts = pd.DataFrame.from_dict(counts_dict)
+
+    # Fill any missing values with 0
+    df_counts.fillna(0, inplace=True)
+
+    # Transpose the dataframe so that the proposals are rows and the response counts are columns
+    df_counts = df_counts.transpose()
+
+    # Rename the index column to 'Proposal'
+    df_counts.index.name = 'Questions'
+
+    return df_counts
+    
+    
+    
+    
+    
+def plot_frequency_distribution_11(df, column, chart_name):
+    # Get the frequency distribution of each category
+    category_counts = df[column].value_counts()
+
+    # Create a figure with proper layout
+    fig, (ax1, ax2) = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
+    fig.tight_layout(pad=5.0)
+
+    # Create a bar chart of the category counts
+    ax1.bar(category_counts.index, category_counts.values)
+    ax1.set_xlabel('Frequency of visits')
+    ax1.set_ylabel('Number of respondents')
+    ax1.set_title(chart_name)
+
+    # Add numbers for each bar
+    for i, v in enumerate(category_counts.values):
+        ax1.text(i, v+3, str(v), ha='center')
+
+    # Rotate x-axis labels
+    ax1.tick_params(axis='x', rotation=90)
+
+    # Create a pie chart of the category percentages
+    wedges, _, autotexts = ax2.pie(category_counts.values, labels=None, autopct='%1.1f%%', startangle=90)
+    ax2.set_title(chart_name)
+    ax2.legend(wedges, category_counts.index, title='Categories', loc='center left', bbox_to_anchor=(1, 0.5))
+
+    # Set the chart axis labels
+    ax2.set_xlabel('Percentage of respondents')
+
+    # Increase the size of the y-axis
+    ax1.set_ylim(0, category_counts.values.max() * 1.1)
+
+    # Add percentage values to the pie chart
+    for autotext in autotexts:
+        autotext.set_color('white')
+
+    # Save the chart as an image
+    plt.savefig("Chart of " + chart_name + '.png', bbox_inches='tight')
+
+    # Display the chart
+    plt.show()
 
 
 
 
 
+
+
+    
+def generate_stacked_horizontal_bar_plot_12(dataframe, title, x_label, y_label):
+    num_columns = len(dataframe.columns)
+    num_bars = len(dataframe.index)
+    figsize_height = num_bars *0.5
+
+    # Create the bar plot with default width bars
+    fig, ax = plt.subplots(figsize=(10, figsize_height))
+    dataframe.plot.barh(stacked=True, ax=ax)
+
+    # Set the title and axis labels
+    ax.set_title(title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+    # Move the legend below the plot
+    legend_position = 'lower center'
+    if figsize_height < 3:
+        legend_position = 'center'
+    
+    legend_labels = ax.legend(loc=legend_position, bbox_to_anchor=(0.5, -3/num_bars), ncol=num_columns).get_texts()
+    ncol = len(legend_labels) // 2
+    ax.legend(loc=legend_position, bbox_to_anchor=(0.5, -2.75/num_bars), ncol=ncol)
+
+    # Add labels to the bars
+    for patch in ax.patches:
+        # Get the width of the patch
+        width = patch.get_width()
+        # Get the height of the patch
+        height = patch.get_height()
+        # Get the x position of the left edge of the patch
+        x = patch.get_x()
+        # Get the y position of the bottom edge of the patch
+        y = patch.get_y()
+        # Add the label to the patch
+        ax.text(x + width / 2, y + height / 2, str(int(width)), ha='center', va='center', color='white')
+
+    # Show the plot
+    plt.show()
+
+    
+    
+    
+    
+    
+def generate_horizontal_bar_chart_13(dataframe, column_name, chart_title, x_label, y_label, color):
+    # Create a dataframe with the specified column
+    df = dataframe[[column_name]].copy()
+
+    # Sort the dataframe by the specified column in descending order
+    df.sort_values(by=column_name, ascending=False, inplace=True)
+
+    # Create the horizontal bar chart
+    ax = df.plot.barh(color=color, legend=False)
+
+    # Set the title and labels
+    ax.set_title(chart_title)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
+    # Add labels to the bars
+    for i, v in enumerate(df[column_name]):
+        ax.text(v + 1, i - 0.2, str(v), color='black')
+
+    # Set the x-axis limits
+    ax.set_xlim([0, max(df[column_name]) * 1.1])
+
+    # Show the plot
+    plt.show()
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
